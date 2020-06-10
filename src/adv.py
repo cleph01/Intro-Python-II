@@ -1,4 +1,8 @@
 from room import Room
+from player import Player
+
+import textwrap
+
 
 # Declare all the rooms
 
@@ -33,19 +37,93 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# for k,v in room.items():
+#     print("Key: ",k, " - Value: ", v.w_to)
 #
 # Main
 #
-
 # Make a new player object that is currently in the 'outside' room.
+player = Player("player_1", room["outside"])
+
+# print("Print Player: ", player)
 
 # Write a loop that:
 #
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+quit = False
+
+
+while quit == False:
+
+    current_room = player._get_current_room()
+
+    # * Prints the current room name
+
+    print("Current Room Name: ", current_room.name)
+   
+    # * Prints the current description (the textwrap module might be useful here).
+
+    print("Current Room Description: ", textwrap.fill(current_room.description, width=50))
+
+
+    # * Waits for user input and decides what to do.
+
+    x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+    #
+    # If the user enters a cardinal direction, attempt to move to the room there.
+    # Print an error message if the movement isn't allowed.
+    #
+    # If the user enters "q", quit the game.
+    if (x.lower() == 'n'):
+        
+        try:
+            
+            player._set_current_room(current_room.n_to)
+
+        except:
+
+            print("Invalid Room, Try Again")
+            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+    elif (x.lower() == 's'):
+        
+        try:
+
+            player._set_current_room(current_room.s_to)
+
+        except:
+
+            print("Invalid Room, Try Again")
+            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+    elif (x.lower() == 'e'):
+        
+        try:
+        
+            player._set_current_room(current_room.e_to)
+
+        except:
+
+            print("Invalid Room, Try Again")
+            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+    elif (x.lower() == 'w'):
+
+        try:
+
+            player._set_current_room(current_room.w_to)
+
+        except:
+
+            print("Invalid Room, Try Again")
+            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+    elif (x.lower() == 'q'):
+        quit = True
+        print("Game Has Been Quit")
+    else:
+        print("Error: That Move Is Not Allowed")
+
+
+
+
