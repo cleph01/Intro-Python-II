@@ -11,11 +11,19 @@ class Room:
         self.s_to = ''
         self.e_to = ''
         self.w_to = ''
+        self.items = []
+        
 
     # object.__str__ method to allow for direct printing of object contents
     def __str__(self):
-        return f'Name: {self.name} -> Desc: {self.description}'
+        return f'Name: {self.name} -> Desc: {self.description} -> Items: {self.items}'
 
-    # No Other Methods to define for this class
+    # Gets Description
     def get_description(self):
         return self.description
+
+    #Sets Items
+    def set_items(self, items):
+        self.items.extend(items)
+
+ 

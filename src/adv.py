@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 import textwrap
 
@@ -26,8 +27,7 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 
-# Link rooms together
-
+# START Link rooms together
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
@@ -36,16 +36,40 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+# END Link rooms together
 
-# for k,v in room.items():
-#     print("Key: ",k, " - Value: ", v.w_to)
+# START Define Items
+items = {
+"map" : Item("map","So you can find your way around"),
+"sword" : Item("sword","A Warrior's Tool"),
+
+"coins" : Item("coins", "Money to Buy Things"),
+"food" : Item("food", "In case you get hungry"),
+
+"rope" : Item("rope", "To Climb"),
+"telescope" : Item("telecope", "So you can see far"),
+
+"torch" : Item("torch", "To see in the dark"),
+"potion" : Item("potion", "Gives you a boost of energy"),
+
+"treasure" : Item("treasure", "You found it")
+}
+# END Define Items
+
+# START Set Items in Rooms
+room['outside'].set_items([items["sword"], items["map"]])
+room['foyer'].set_items([items["coins"], items["food"]])
+room['overlook'].set_items([items["rope"], items["telescope"]])
+room['narrow'].set_items([items["torch"], items["potion"]])
+room['treasure'].set_items([items["treasure"]])
+# END Set Items in Rooms
+
 #
 # Main
 #
 # Make a new player object that is currently in the 'outside' room.
 player = Player("player_1", room["outside"])
 
-# print("Print Player: ", player)
 
 # Write a loop that:
 #
@@ -58,16 +82,25 @@ while quit == False:
 
     # * Prints the current room name
 
-    print("Current Room Name: ", current_room.name)
+    current_room_items = ''
+
+    if (len(current_room.items) == 0):
+        
+        current_room_items = "Room is Empty"
+
+    else:
+
+        for item in current_room.items:
+
+            current_room_items = current_room_items + item.name + ", "
+
+
+    print("\n ----Current Location---- \n\n","-", current_room.name,"-", "\n\n", textwrap.fill(current_room.description, width=50), "\n\n Items in this Room -> ", current_room_items,"\n\n------------------------" )
    
-    # * Prints the current description (the textwrap module might be useful here).
-
-    print("Current Room Description: ", textwrap.fill(current_room.description, width=50))
-
 
     # * Waits for user input and decides what to do.
 
-    x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+    x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
 
     #
     # If the user enters a cardinal direction, attempt to move to the room there.
@@ -83,7 +116,8 @@ while quit == False:
         except:
 
             print("Invalid Room, Try Again")
-            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
 
     elif (x.lower() == 's'):
         
@@ -94,7 +128,8 @@ while quit == False:
         except:
 
             print("Invalid Room, Try Again")
-            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
 
     elif (x.lower() == 'e'):
         
@@ -105,7 +140,8 @@ while quit == False:
         except:
 
             print("Invalid Room, Try Again")
-            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
 
     elif (x.lower() == 'w'):
 
@@ -116,13 +152,130 @@ while quit == False:
         except:
 
             print("Invalid Room, Try Again")
-            x = input("\n Enter the next direction (i.e. n, s, e, w): ")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
+
+    elif (x.lower() == 'i'):
+
+        try:
+
+            print("\n Items In This Room Are: \n ")
+
+            if len(current_room.items) == 0:
+
+                print("This room is Empty ")
+
+            else:
+
+                for idx, item in enumerate(current_room.items):
+                    
+                    print(idx+1, " - Item Name: ", item.name)
+
+            print("\n")
+
+        except:
+
+            print("Error Getting Items, Try Again")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
+
+    elif (x.lower() == 'p'):
+
+        try:
+
+            print("\n Items In Player Inventory Are: \n ")
+
+            if len(player.items) == 0:
+
+                print("Your Inventory is Empty ")
+
+            else:
+
+                for idx, item in enumerate(player.items):
+                    
+                    print(idx+1, " - Item Name: ", item.name)
+
+            print("\n")
+
+        except:
+
+            print("Error Checking Player Inventory")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
+    
+    elif (x.lower().strip().split()[0] == 'take'):
+
+        found = False
+
+        item_name = x.lower().strip().split()[1]
+
+        try:
+
+            for item in current_room.items:
+
+                if item.name == item_name:
+
+                    found = True
+
+                    player.items.append(item)
+
+                    new_room_contents = [item for item in current_room.items if item.name != item_name]
+
+                    current_room.items = new_room_contents
+
+                    item.on_take()
+
+            if found == False:
+
+                print(f'\n {item_name} not in the Room')
+        
+        except:
+
+            print("Error Taking Items, Try Again")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
+
+
+    elif (x.lower().strip().split()[0] == 'drop'):
+
+        found = False
+
+        drop_item_name = x.lower().strip().split()[1]
+
+        try:
+
+            for item in player.items:
+
+                if item.name == drop_item_name:
+
+                    found = True
+
+                    new_list = [item for item in player.items if item.name != drop_item_name]
+
+                    player.set_items(new_list)
+
+                    item.on_drop()
+
+            if found == False:
+
+                    print(f'\n {drop_item_name} not in Player Inventory')
+
+        except:
+
+            print("Error Dropping Items, Try Again")
+
+            x = input("\n ----MENU---- \n N: Travel North \n S: Travel South \n E: Travel East \n W: Travel West \n I: Check Room for Items \n P: Check Players Inventory \n Take [Item]: Take Item \n Drop [Item]: Drop Item \n Q: Quit Game \n\n Enter Your Choice: ")
+
 
     elif (x.lower() == 'q'):
+        
         quit = True
+        
         print("Game Has Been Quit")
+
     else:
-        print("Error: That Move Is Not Allowed")
+
+        print("Error Quitting Game")
 
 
 

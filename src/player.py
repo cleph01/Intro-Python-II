@@ -7,6 +7,7 @@ class Player:
     # Define Attributes
         self._name = name
         self._current_room = current_room
+        self.items = []
 
     # object.__str__ method to allow for direct printing of object contents
     def __str__(self):
@@ -29,6 +30,15 @@ class Player:
         self._name = name
     def _get_name(self):
         return self._name
+
+    #Sets Items
+    def set_items(self, items):
+        self.items = items
+
+
+    #Get List of Items
+    def get_items(self):
+        return self.items
 
     # property keyword wires up the getter and setter    
     room = property(_get_name, _set_name)
